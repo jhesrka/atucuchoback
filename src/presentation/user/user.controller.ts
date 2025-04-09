@@ -17,21 +17,35 @@ export class UserController {
 
   createUser = (req: Request, res: Response) => {
     console.log("Datos recibidos en el backend:", req.body);
-    const [error, createUserDto] = CreateUserDTO.create(req.body); // Usamos CreateUserDTO en lugar de CreateDTO
+    const photoUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
+    
+    const [error, createUserDto] = CreateUserDTO.create(req.body);
     if (error) {
+      console.error("Error en la creación del DTO:", error);
       return res.status(422).json({ message: error });
     }
-
+  
+    if (!createUserDto) {
+      console.error("Error: DTO no válido");
+      return res.status(500).json({ message: "Error al crear el DTO de usuario" });
+    }
+  
+    const updatedCreateUserDto = { 
+      ...createUserDto, 
+      photoperfil: photoUrl ?? createUserDto.photoperfil 
+    };
+  
     this.userService
-      .createUser(createUserDto!)
+      .createUser(updatedCreateUserDto)
       .then((data) => {
         res.status(201).json(data);
       })
       .catch((error) => {
-        console.log(error.message, error.statusCode);
+        console.error("Error en la creación del usuario:", error.message);
         return this.handleError(error, res);
       });
   };
+  
 
   findAllUsers = (req: Request, res: Response) => {
     this.userService

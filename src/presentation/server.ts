@@ -4,6 +4,8 @@ import cors from "cors";
 import http from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { setIO } from "../config/socket"; // Asegúrate de que la ruta sea correcta
+import fs from 'fs';  // Importa el módulo fs
+import path from 'path';  // Importa el módulo path
 
 interface Options {
   port: number;
@@ -32,6 +34,13 @@ export class Server {
   }
 
   async start() {
+    // Asegurarse de que el directorio "uploads" exista
+    const uploadsPath = path.join(__dirname, 'uploads');  // Obtiene la ruta absoluta para 'uploads'
+    if (!fs.existsSync(uploadsPath)) {  // Verifica si el directorio 'uploads' existe
+      fs.mkdirSync(uploadsPath);  // Si no existe, lo crea
+      console.log('El directorio "uploads" se creó exitosamente.');
+    }
+
     this.app.use(cors({ origin: "http://localhost:5173" }));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
