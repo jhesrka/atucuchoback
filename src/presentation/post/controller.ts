@@ -9,11 +9,10 @@ export class PostController {
     if (error instanceof CustomError) {
       return res.status(error.statusCode).json({ message: error.message });
     }
-  
+
     console.error("Unhandled error:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Something went very wrong" });
   };
-  
 
   createPost = (req: Request, res: Response) => {
     const [error, createPostDto] = CreateDTO.create(req.body);
@@ -26,14 +25,7 @@ export class PostController {
       .then((data) => {
         res.status(201).json(data);
       })
-      .catch((error) => {
-        console.log(error.message, error.statusCode);
-
-        return res.status(500).json({
-          message: "Internal Server Error",
-          error,
-        });
-      });
+      .catch((error: unknown) => this.handleError(error, res));
   };
 
   findAllPost = (req: Request, res: Response) => {
@@ -42,12 +34,7 @@ export class PostController {
       .then((data) => {
         res.status(201).json(data);
       })
-      .catch((error) => {
-        return res.status(500).json({
-          message: "Internal Error",
-          error,
-        });
-      });
+      .catch((error:unknown) => this.handleError(error,res));
   };
 
   findOnePost = (req: Request, res: Response) => {
@@ -57,12 +44,7 @@ export class PostController {
       .then((data) => {
         res.status(201).json(data);
       })
-      .catch((error) => {
-        return res.status(500).json({
-          message: "Internal Error",
-          error,
-        });
-      });
+      .catch((error: unknown) => this.handleError(error, res));
   };
 
   updatePost = (req: Request, res: Response) => {
@@ -75,12 +57,7 @@ export class PostController {
       .then((data) => {
         res.status(200).json(data);
       })
-      .catch((error) => {
-        return res.status(500).json({
-          message: "Internal Error",
-          error,
-        });
-      });
+      .catch((error: unknown) => this.handleError(error, res));
   };
   deletePost = (req: Request, res: Response) => {
     const { id } = req.params;
@@ -89,11 +66,6 @@ export class PostController {
       .then(() => {
         res.status(204).json(null);
       })
-      .catch((error) => {
-        return res.status(500).json({
-          message: "Internal Error",
-          error,
-        });
-      });
+      .catch((error: unknown) => this.handleError(error, res));
   };
 }

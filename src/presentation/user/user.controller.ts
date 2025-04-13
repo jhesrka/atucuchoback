@@ -1,7 +1,7 @@
   // src/presentation/user/user.controller.ts
   import { Request, Response } from "express";
   import { UserService } from "../services/user.service";
-  import { CreateUserDTO, UpdateUserDTO, CustomError } from "../../domain";
+  import { CreateUserDTO, UpdateUserDTO, CustomError, LoginUserDTO } from "../../domain";
 
   export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -18,7 +18,7 @@
       const photoUrl = req.file ? (req.file as any).location : undefined;
 
       const [error, createUserDto] = CreateUserDTO.create(req.body);
-      if (error) return res.status(422).json({ message: error });
+      if (error) return this.handleError(error, res)
 
       const updatedCreateUserDto = {
         ...createUserDto!,
@@ -62,6 +62,13 @@
       this.userService
         .deleteUser(id)
         .then(() => res.status(204).json(null))
+        .catch((error) => this.handleError(error, res));
+    };
+    login = (req:Request, res:Response)=>{
+      const[error,loginUserDto]=LoginUserDTO.create(req.body)
+      if(error)return res.status(422).json({message:error})
+      this.userService.login(loginUserDto!)
+        .then((data) => res.status(200).json(data))
         .catch((error) => this.handleError(error, res));
     };
   }

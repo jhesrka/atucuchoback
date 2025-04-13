@@ -13,7 +13,7 @@ export class PostRoutes {
     router.get("/:id", postController.findOnePost);
     router.patch("/:id", postController.updatePost);
     router.delete("/:id", postController.deletePost);
-
+   
     return router;
   }
 }

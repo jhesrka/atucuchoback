@@ -40,11 +40,13 @@ export class UserRoutes {
     const userService = new UserService();
     const userController = new UserController(userService);
 
-    router.post("/", upload.single("photoperfil"), userController.createUser);
+    router.post("/register", upload.single("photoperfil"), userController.createUser);
     router.get("/", userController.findAllUsers);
     router.get("/:id", userController.findOneUser);
     router.patch("/:id", userController.updateUser);
     router.delete("/:id", userController.deleteUser);
+    router.post("/login", userController.login);
+
 
     return router;
   }

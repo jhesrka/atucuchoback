@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
 import { Post } from "./post.model";  // Importar la entidad Post
+import { encriptAdapter } from "../../../config";
 
 @Entity()
 export class User extends BaseEntity {
@@ -67,9 +68,14 @@ export class User extends BaseEntity {
 
   @Column("varchar", {
     length: 20,
-    default: 'active'
+    default: true
   })
-  status: string;
+  status: boolean;
+
+  @BeforeInsert()
+  encryptedPassword(){
+    this.password = encriptAdapter.hash(this.password)
+  }
 
   // Relación de un usuario con muchos posts
   @OneToMany(() => Post, (post) => post.user)
