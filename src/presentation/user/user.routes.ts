@@ -7,6 +7,8 @@ import multerS3 from "multer-s3";
 import { s3 } from "../../config/awsConfig"; // ✅ IMPORT CORRECTA
 
 import dotenv from 'dotenv';
+import { EmailService } from "../services/email.service";
+import { envs } from "../../config";
 dotenv.config();
 
 // Configuración de multer con S3
@@ -37,7 +39,13 @@ const upload = multer({
 export class UserRoutes {
   static get routes(): Router {
     const router = Router();
-    const userService = new UserService();
+    const emailService= new EmailService(
+      envs.MAILER_SERVICE,
+      envs.MAILER_EMAIL,
+      envs.MAILER_SECRET_KEY,
+      envs.SEND_EMAIL
+    )
+    const userService = new UserService(emailService);
     const userController = new UserController(userService);
 
     router.post("/register", upload.single("photoperfil"), userController.createUser);
@@ -46,6 +54,7 @@ export class UserRoutes {
     router.patch("/:id", userController.updateUser);
     router.delete("/:id", userController.deleteUser);
     router.post("/login", userController.login);
+    router.get("/validate-email/:token", userController.validateAccount)
 
 
     return router;
