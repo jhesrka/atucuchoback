@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsnd --respawn src/app.ts",
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && nde dist/app.js"
+    "start": "npm run build && node dist/app.js"
   },
   "keywords": [],
   "author": "",
