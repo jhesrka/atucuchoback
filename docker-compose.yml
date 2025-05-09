@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  app1:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      PASSWORD_DATABASE: npg_mgK1vlMTO2Yq
+      USERNAME_DATABASE: atucucho_owner
+      DATABASE: atucucho
+      PORT_DATABASE: 5432
+      HOST_DATABASE: ep-shrill-voice-a5t0b4r1-pooler.us-east-2.aws.neon.tech
+      AWS_ACCESS_KEY_ID: AKIAZB3GGIDBK476B5CZ
+      AWS_SECRET_ACCESS_KEY: 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
+      AWS_REGION: us-east-2
+      AWS_BUCKET_NAME: atucucho-shop-bucket
+      JWT_SEED: YXR1Y3VjaG9TaG9wVXNlcg
+      JWT_EXPIRE_IN: 3h
+      SEND_EMAIL: "true"
+      MAILER_SERVICE: gmail
+      MAILER_EMAIL: jhesrka@gmail.com
+      MAILER_SECRET_KEY: hfzdaindowovrggp
+      WEBSERVICE_URL: localhost:3000
+    command: npm run start
+  app2:
+    build: .
+    ports:
+      - "3001:3000"
+    environment:
+      PORT: 3000
+      PASSWORD_DATABASE: npg_mgK1vlMTO2Yq
+      USERNAME_DATABASE: atucucho_owner
+      DATABASE: atucucho
+      PORT_DATABASE: 5432
+      HOST_DATABASE: ep-shrill-voice-a5t0b4r1-pooler.us-east-2.aws.neon.tech
+      AWS_ACCESS_KEY_ID: AKIAZB3GGIDBK476B5CZ
+      AWS_SECRET_ACCESS_KEY: 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
+      AWS_REGION: us-east-2
+      AWS_BUCKET_NAME: atucucho-shop-bucket
+      JWT_SEED: YXR1Y3VjaG9TaG9wVXNlcg
+      JWT_EXPIRE_IN: 3h
+      SEND_EMAIL: "true"
+      MAILER_SERVICE: gmail
+      MAILER_EMAIL: jhesrka@gmail.com
+      MAILER_SECRET_KEY: hfzdaindowovrggp
+      WEBSERVICE_URL: localhost:3000
+    command: npm run start
+  app3:
+    build: .
+    ports:
+      - "3002:3000"
+    environment:
+      PORT: 3000
+      PASSWORD_DATABASE: npg_mgK1vlMTO2Yq
+      USERNAME_DATABASE: atucucho_owner
+      DATABASE: atucucho
+      PORT_DATABASE: 5432
+      HOST_DATABASE: ep-shrill-voice-a5t0b4r1-pooler.us-east-2.aws.neon.tech
+      AWS_ACCESS_KEY_ID: AKIAZB3GGIDBK476B5CZ
+      AWS_SECRET_ACCESS_KEY: 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
+      AWS_REGION: us-east-2
+      AWS_BUCKET_NAME: atucucho-shop-bucket
+      JWT_SEED: YXR1Y3VjaG9TaG9wVXNlcg
+      JWT_EXPIRE_IN: 3h
+      SEND_EMAIL: "true"
+      MAILER_SERVICE: gmail
+      MAILER_EMAIL: jhesrka@gmail.com
+      MAILER_SECRET_KEY: hfzdaindowovrggp
+      WEBSERVICE_URL: localhost:3000
+    command: npm run start

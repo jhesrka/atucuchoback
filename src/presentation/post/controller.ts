@@ -16,6 +16,7 @@ export class PostController {
 
   createPost = (req: Request, res: Response) => {
     const [error, createPostDto] = CreateDTO.create(req.body);
+    
     if (error) {
       return res.status(422).json({ message: error });
     }

@@ -51,21 +51,39 @@ export class UserService {
   // Obtener todos los usuarios
   async findAllUsers() {
     try {
-      return await User.find();
+      const users = await User.find();
+
+      // Filtrar manualmente los campos que deseas devolver
+      return users.map((user) => ({
+        id: user.id,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        birthday: user.birthday,
+        whatsapp: user.whatsapp,
+        photoperfil: user.photoperfil,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+        rol: user.rol,
+        status: user.status,
+      }));
     } catch (error) {
       throw CustomError.internalServer("Error obteniendo los usuarios");
     }
   }
 
   // Obtener un usuario por ID
-  async findOneUser(id: string) {
-    const user = await User.findOne({ where: { id } });
-    if (!user) throw CustomError.notFound("Usuario no encontrado");
-    return user;
+  async findOneUser(userId: string) {
+    const result = await User.findOne({
+      where: { id: userId, status: Status.ACTIVE },
+    });
+    if (!result) throw CustomError.notFound("Usuario no encontrado");
+    return result;
   }
 
   // Crear un nuevo usuario
-  async createUser(userData: CreateUserDTO) {
+  async createUser( userData: CreateUserDTO, file: Express.Multer.File | undefined
+  ) {
     // Encriptar la contraseña
 
     const user = new User();
@@ -76,8 +94,10 @@ export class UserService {
     user.password = userData.password;
     user.birthday = new Date(userData.birthday); // Convertir a tipo Date
     user.whatsapp = userData.whatsapp.trim();
-    user.photoperfil = userData.photoperfil?.trim() || "";
 
+    if (file?.originalname && file.originalname.length>0) {
+      //TODO:SUBIR ESTO A LA NUBE
+    }
     try {
       const newUser = await user.save();
       await this.sendEmailValidationLink(newUser.email);
@@ -92,7 +112,6 @@ export class UserService {
         photoperfil: newUser.photoperfil,
         create_at: newUser.created_at,
         update_at: newUser.updated_at,
-        is_verified: newUser.is_verified,
         status: newUser.status,
       };
     } catch (error: any) {
@@ -189,10 +208,24 @@ export class UserService {
     try {
       await user.save();
       return {
-        message:"activado"
-      }
+        message: "activado",
+      };
     } catch (error) {
       throw CustomError.internalServer("Something went very wrong");
     }
   };
+
+  async getUserProfile(user: User) {
+    return {
+      id: user.id,
+      name: user.name,
+      surname: user.surname,
+      email: user.email,
+      photo: user.photoperfil,
+    };
+  }
+
+  async blockAccount() {
+    return "hola";
+  }
 }

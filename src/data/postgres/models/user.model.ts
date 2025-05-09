@@ -16,6 +16,10 @@ export enum Status {
   INACTIVE = "INACTIVE",
   DELETED = "DELETED",
 }
+export enum UserRole {
+  ADMIN = "ADMIN",
+  USER = "USER",
+}
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -39,7 +43,7 @@ export class User extends BaseEntity {
     unique: true,
   })
   email: string;
-
+  
   @Column("varchar", {
     nullable: false,
   })
@@ -75,23 +79,22 @@ export class User extends BaseEntity {
   })
   updated_at: Date;
 
-  @Column("boolean", {
-    default: false,
+  @Column("enum", {
+    enum: UserRole,
+    default: UserRole.USER,
   })
-  is_verified: boolean;
+  rol: UserRole;
 
   @Column("enum", {
     enum: Status,
     default: Status.INACTIVE,
   })
   status: Status;
-
+  // Relación de un usuario con muchos posts
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[]; // Un usuario tiene muchos posts
   @BeforeInsert()
   encryptedPassword() {
     this.password = encriptAdapter.hash(this.password);
   }
-
-  // Relación de un usuario con muchos posts
-  @OneToMany(() => Post, (post) => post.user)
-  posts: Post[]; // Un usuario tiene muchos posts
 }
